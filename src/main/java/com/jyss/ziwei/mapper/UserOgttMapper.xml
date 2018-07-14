@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.UserOgttMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.UserOgtt" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="u_id" property="uId" jdbcType="INTEGER" />
+    <result column="ogtt_time" property="ogttTime" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.UserOgtt" useGeneratedKeys="true" keyProperty="id">
+    insert into u_user_ogtt (id, u_id,ogtt_time, created_at, last_modify_time, status)
+    values (#{id,jdbcType=INTEGER},#{uId,jdbcType=INTEGER},  #{ogttTime,jdbcType=VARCHAR},
+      now(), now(), #{status,jdbcType=TINYINT})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.UserOgtt" >
+    update u_user_ogtt
+    <set >
+      <if test="ogttTime != null" >ogtt_time = #{ogtt_time,jdbcType=VARCHAR},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--详情查询  -->
+  <select id="getUserOgtt" resultMap="BaseResultMap" parameterType="String">
+    select c.id,c.u_id,c.ogtt_time
+    from u_user_ogtt c
+    <where>
+      1=1
+      <if test="status != null and status !=''"> and c.status = #{status} </if>
+      <if test="uId != null and uId !=''"> and c.u_id = #{uId} </if>
+      <if test="id != null and id !=''"> and c.id = #{id} </if>
+    </where>
+    order by c.created_at desc
+  </select>
+
+
+  <!--删除-->
+  <delete id="deleteUserOgtt" parameterType="String">
+    delete from u_user_ogtt
+    <where>
+      1=1
+      <if test="id != null and id !=''"> and id = #{id} </if>
+    </where>
+
+  </delete>
+
+</mapper>

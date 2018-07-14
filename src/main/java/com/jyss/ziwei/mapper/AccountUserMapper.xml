@@ -1,0 +1,261 @@
+
+<!--  <?xml version="1.0" encoding="UTF-8" ?>-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyss.ziwei.mapper.AccountUserMapper" >
+
+    <resultMap type="com.jyss.ziwei.entity.AccountUser" id="auResultMap">
+        <id property="id" column="id"  />
+        <result property="roleId" column="role_id"  />
+        <result property="name" column="name"  />
+        <result property="roleSign" column="role_sign"  />
+        <result property="roleName" column="role_name"  />
+        <result property="permissionName" column="permission_name"  />
+        <result property="permissionSign" column="permission_sign"  />
+        <result property="permissionId" column="permission_id"  />
+        <result property="username" column="username"  />
+        <result property="description" column="description"  />
+        <result property="password" column="password"  />
+        <result property="salt" column="salt"  />
+        <result property="code" column="code"  />
+        <result property="href" column="href"  />
+        <result property="title" column="title"  />
+        <result property="icon" column="icon"  />
+        <result property="status" column="status"  />
+        <result property="createdAt" column="created_at"  />
+        <result property="lastLoginTime" column="last_login_time"  />
+        <result property="cjsj" column="cjsj"  />
+        <result property="dlsj" column="dlsj"  />
+        <result property="userId" column="user_id"  />
+
+    </resultMap>
+
+    <resultMap type="com.jyss.ziwei.entity.AccountLog" id="logMap">
+        <id property="id" column="id"  />
+        <result property="username" column="username"  />
+        <result property="description" column="description"  />
+        <result property="status" column="status"  />
+        <result property="createdAt" column="created_at"  />
+        <result property="cjsj" column="cjsj"  />
+    </resultMap>
+
+
+    <select id="getAuBy" resultType="com.jyss.ziwei.entity.AccountUser">
+        select t.* from (
+        select p.*,r.role_name as roleName ,r.role_sign as roleSign from p_account_users p
+        left join  p_role r
+        on p.role_id = r.id ) t
+        <where>
+            t.status = 1
+            <if test="username != null and username !=''"> and t.username = #{username} </if>
+            <if test="id != null and id !=''"> and t.id = #{id} </if>
+        </where>
+    </select>
+
+    <select id="getAuByUsernameAndPassword" resultType="com.jyss.ziwei.entity.AccountUser">
+        select t.* from (
+        select p.*,r.role_name as roleName ,r.role_sign as roleSign from p_account_users p
+        left join  p_role r
+        on p.role_id = r.id ) t
+        <where>
+            t.status = 1
+            <if test="username != null and username !=''"> and t.username = #{username} </if>
+            <if test="password != null and password !=''"> and t.password = #{password} </if>
+            <if test="id != null and id !=''"> and t.id = #{id} </if>
+        </where>
+
+    </select>
+
+    <select id="getAuByUsername" resultMap="auResultMap">
+        select t.*,DATE_FORMAT(t.created_at, '%Y-%m-%d %H:%i:%s' ) cjsj,DATE_FORMAT(t.last_login_time, '%Y-%m-%d %H:%i:%s' ) dlsj from (
+        select p.*,r.role_name as roleName ,r.role_sign as roleSign from p_account_users p
+        left join  p_role r
+        on p.role_id = r.id ) t
+        <where>
+            1 = 1
+            <if test="username != null and username !='' and username !='XXX' "> and t.username  LIKE CONCAT('%',#{username},'%')   </if>
+            <if test="id != null and id !=''"> and t.id = #{id} </if>
+        </where>
+       order  by t.role_id ,t.status desc,t.created_at desc
+    </select>
+
+    <select id="getPermissionBy" resultMap="auResultMap">
+        select t.* from (
+        select p.*,r.role_name ,r.role_sign,m.permission_name,m.permission_sign,m.title,m.icon,m.href,m.code  from p_account_users p
+        left join  p_role r
+        on p.role_id = r.id
+        left join  p_role_permission n
+        on p.role_id = n.role_id
+        left join  p_permission m
+        on  n.permission_id = m.id ) t
+        <where>
+            t.status = 1
+            <if test="username != null and username !=''"> and t.username = #{username} </if>
+            <if test="id != null and id !=''"> and t.id = #{id} </if>
+        </where>
+        order  by  t.code
+    </select>
+
+    <select id="getPermissionAndName" resultMap="auResultMap">
+        select  * from p_account_users
+        <where>
+            1=1
+            <if test="username != null and username !=''"> and username = #{username} </if>
+            <if test="roleId != null and roleId !=''"> and role_id = #{roleId} </if>
+            <if test="id != null and id !=''"> and id = #{id} </if>
+        </where>
+
+    </select>
+
+    <select id="getZlRole" resultMap="auResultMap">
+        select  * from p_account_users
+        <where>
+            1=1
+            <if test="id != null and id !=''"> and id = #{id} </if>
+            <if test="roleId != null and roleId !=''"> and role_id = #{roleId} </if>
+        </where>
+
+    </select>
+
+    <!--菜单列表-->
+    <select id="getMennuTree" resultMap="auResultMap">
+        select *  from  p_permission
+        <where>
+            1=1
+            <if test="code != null and code !=''"> and code = #{code} </if>
+        </where>
+        order  by  code
+    </select>
+
+    <select id="getPermissionLsitBy" resultMap="auResultMap">
+        select t.* from (
+        select p.*,r.role_name ,r.role_sign,m.permission_name,m.permission_sign,m.title,m.icon,m.href,m.code  from p_account_users p
+        left join  p_role r
+        on p.role_id = r.id
+        left join  p_role_permission n
+        on p.role_id = n.role_id
+        left join  p_permission m
+        on  n.permission_id = m.id ) t
+        <where>
+            t.status = 1
+            <if test="username != null and username !=''"> and t.username = #{username} </if>
+            <if test="id != null and id !=''"> and t.id = #{id} </if>
+        </where>
+        order  by  t.code
+    </select>
+
+    <select id="getRolePermission" resultMap="auResultMap">
+        select * from  p_role_permission
+        <where>
+            1 = 1
+            <if test="roleId != null and roleId !=''"> and  role_id= #{roleId} </if>
+        </where>
+        order by role_id,permission_id
+    </select>
+
+
+    <select id="getAuNum" resultType="int">
+        select count(*) from p_account_users
+        <where>
+            1 = 1
+            <if test="username != null and username !=''"> and  username = #{username} </if>
+            <if test="id != null and id !=''"> and id = #{id} </if>
+        </where>
+    </select>
+
+    <!--角色列表 -->
+    <select id="getRoles" resultMap="auResultMap">
+        select  * from p_role
+        <where>
+            1 = 1
+            <if test="roleSign != null and roleSign !=''"> and  role_sign = #{roleSign} </if>
+        </where>
+    </select>
+
+    <!--修改角色-->
+    <update id="upRoles" parameterType="com.jyss.ziwei.entity.AccountUser">
+        update p_role  set role_name = #{roleName},role_sign = #{roleSign},description = #{description}   where id = #{id}
+    </update>
+
+    <!-- 删除角色 -->
+    <delete id="delRoles" parameterType="java.util.List">
+        delete from p_role where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 删除权限 -->
+    <delete id="delRolePermission" parameterType="java.util.List">
+        delete from p_role_permission where role_id = #{roleId}
+    </delete>
+
+
+    <!-- 增加角色 -->
+    <insert id="addRoles" parameterType="com.jyss.ziwei.entity.AccountUser"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into p_role values(null,#{roleName},#{roleSign},#{description})
+    </insert>
+
+    <!-- 增加权限关联 -->
+    <insert id="addrolePermission"  parameterType="string" useGeneratedKeys="true"  >
+        insert into p_role_permission values(null,#{roleId},#{permissionId})
+    </insert>
+
+
+    <!--修改密码 -->
+    <update id="upHtPwd" parameterType="string" >
+        update p_account_users  set password = #{password},salt = #{salt}
+        <where>
+            status = 1
+            <if test="username != null and username !=''"> and  username = #{username} </if>
+            <if test="id != null and id !=''"> and id = #{id} </if>
+        </where>
+    </update>
+
+    <!--禁用用户 -->
+    <update id="upAccountStatus" parameterType="java.util.List" >
+        update p_account_users  set status = #{status}  where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 删除用户 -->
+    <delete id="deleteAccounts" parameterType="java.util.List">
+        delete from p_account_users where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 增加用户 -->
+    <insert id="addAccount" parameterType="com.jyss.ziwei.entity.AccountUser"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into p_account_users values(null,#{roleId},#{name},#{username},#{password},#{salt},now(),now(),#{status},#{userId})
+    </insert>
+
+    <!--修改用户 -->
+    <update id="upAccount" parameterType="com.jyss.ziwei.entity.AccountUser" >
+        update p_account_users  set role_id =#{roleId},password = #{password},salt = #{salt},username = #{username},name = #{username} ,created_at = now()
+        where id =#{id}
+    </update>
+
+    <!-- 增加用户操作日志 -->
+    <insert id="addLog" parameterType="string" >
+        insert into p_account_log values(null,#{username},#{description},now(),1)
+    </insert>
+
+    <!-- 查询用户操作日志 -->
+    <select id="getAccountLog" resultMap="logMap">
+        select  l.*,DATE_FORMAT(l.created_at, '%Y-%m-%d %H:%i:%s' ) cjsj from p_account_log l
+        <where>
+            1=1
+            <if test="username != null and username !=''"> and l.username = #{username} </if>
+        </where>
+        order by l.created_at DESC
+    </select>
+
+
+</mapper>

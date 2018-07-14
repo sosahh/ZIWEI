@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.BodyScaleMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.BodyScale" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="qn_scale_type_weight" property="qnScaleTypeWeight" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_bmi" property="qnScaleTypeBmi" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_body_fat_rage" property="qnScaleTypeBodyFatRage" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_subcutaneous_fat" property="qnScaleTypeSubcutaneousFat" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_visceral_fat" property="qnScaleTypeVisceralFat" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_body_water_rate" property="qnScaleTypeBodyWaterRate" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_muscle_rate" property="qnScaleTypeMuscleRate" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_bone_mass" property="qnScaleTypeBoneMass" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_bmr" property="qnScaleTypeBmr" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_body_type" property="qnScaleTypeBodyType" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_protein" property="qnScaleTypeProtein" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_lean_body_weight" property="qnScaleTypeLeanBodyWeight" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_muscle_mass" property="qnScaleTypeMuscleMass" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_metabolic_age" property="qnScaleTypeMetabolicAge" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_health_score" property="qnScaleTypeHealthScore" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_heart_rate" property="qnScaleTypeHeartRate" jdbcType="VARCHAR" />
+    <result column="qn_scale_type_heart_index" property="qnScaleTypeHeartIndex" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.BodyScale" >
+    insert into d_body_scale (id, u_id, qn_scale_type_weight,
+      qn_scale_type_bmi, qn_scale_type_body_fat_rage,
+      qn_scale_type_subcutaneous_fat, qn_scale_type_visceral_fat, 
+      qn_scale_type_body_water_rate, qn_scale_type_muscle_rate, 
+      qn_scale_type_bone_mass, qn_scale_type_bmr, qn_scale_type_body_type, 
+      qn_scale_type_protein, qn_scale_type_lean_body_weight, 
+      qn_scale_type_muscle_mass, qn_scale_type_metabolic_age, 
+      qn_scale_type_health_score, qn_scale_type_heart_rate, 
+      qn_scale_type_heart_index, status, type, create_time)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{qnScaleTypeWeight,jdbcType=VARCHAR}, 
+      #{qnScaleTypeBmi,jdbcType=VARCHAR}, #{qnScaleTypeBodyFatRage,jdbcType=VARCHAR}, 
+      #{qnScaleTypeSubcutaneousFat,jdbcType=VARCHAR}, #{qnScaleTypeVisceralFat,jdbcType=VARCHAR}, 
+      #{qnScaleTypeBodyWaterRate,jdbcType=VARCHAR}, #{qnScaleTypeMuscleRate,jdbcType=VARCHAR}, 
+      #{qnScaleTypeBoneMass,jdbcType=VARCHAR}, #{qnScaleTypeBmr,jdbcType=VARCHAR}, #{qnScaleTypeBodyType,jdbcType=VARCHAR}, 
+      #{qnScaleTypeProtein,jdbcType=VARCHAR}, #{qnScaleTypeLeanBodyWeight,jdbcType=VARCHAR}, 
+      #{qnScaleTypeMuscleMass,jdbcType=VARCHAR}, #{qnScaleTypeMetabolicAge,jdbcType=VARCHAR}, 
+      #{qnScaleTypeHealthScore,jdbcType=VARCHAR}, #{qnScaleTypeHeartRate,jdbcType=VARCHAR}, 
+      #{qnScaleTypeHeartIndex,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{type,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.BodyScale" >
+    update d_body_scale
+    <set >
+      <if test="uId != null" >u_id = #{uId,jdbcType=BIGINT},</if>
+      <if test="qnScaleTypeWeight != null" >
+        qn_scale_type_weight = #{qnScaleTypeWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeBmi != null" >
+        qn_scale_type_bmi = #{qnScaleTypeBmi,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeBodyFatRage != null" >
+        qn_scale_type_body_fat_rage = #{qnScaleTypeBodyFatRage,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeSubcutaneousFat != null" >
+        qn_scale_type_subcutaneous_fat = #{qnScaleTypeSubcutaneousFat,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeVisceralFat != null" >
+        qn_scale_type_visceral_fat = #{qnScaleTypeVisceralFat,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeBodyWaterRate != null" >
+        qn_scale_type_body_water_rate = #{qnScaleTypeBodyWaterRate,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeMuscleRate != null" >
+        qn_scale_type_muscle_rate = #{qnScaleTypeMuscleRate,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeBoneMass != null" >
+        qn_scale_type_bone_mass = #{qnScaleTypeBoneMass,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeBmr != null" >
+        qn_scale_type_bmr = #{qnScaleTypeBmr,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeBodyType != null" >
+        qn_scale_type_body_type = #{qnScaleTypeBodyType,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeProtein != null" >
+        qn_scale_type_protein = #{qnScaleTypeProtein,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeLeanBodyWeight != null" >
+        qn_scale_type_lean_body_weight = #{qnScaleTypeLeanBodyWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeMuscleMass != null" >
+        qn_scale_type_muscle_mass = #{qnScaleTypeMuscleMass,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeMetabolicAge != null" >
+        qn_scale_type_metabolic_age = #{qnScaleTypeMetabolicAge,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeHealthScore != null" >
+        qn_scale_type_health_score = #{qnScaleTypeHealthScore,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeHeartRate != null" >
+        qn_scale_type_heart_rate = #{qnScaleTypeHeartRate,jdbcType=VARCHAR},
+      </if>
+      <if test="qnScaleTypeHeartIndex != null" >
+        qn_scale_type_heart_index = #{qnScaleTypeHeartIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="type != null" >type = #{type,jdbcType=TINYINT},</if>
+      <if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

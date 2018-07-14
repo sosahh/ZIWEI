@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.BaseConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.BaseConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="base_key" property="baseKey" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.jyss.ziwei.entity.BaseConfig" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.BaseConfig" >
+    insert into p_base_config (id, base_key, title, status, modify_time, content)
+    values (#{id,jdbcType=INTEGER}, #{baseKey,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
+      #{status,jdbcType=TINYINT}, #{modifyTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.BaseConfig" >
+    update p_base_config
+    <set >
+      <if test="baseKey != null" >base_key = #{baseKey,jdbcType=VARCHAR},</if>
+      <if test="title != null" >title = #{title,jdbcType=VARCHAR},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="modifyTime != null" >modify_time = #{modifyTime,jdbcType=TIMESTAMP},</if>
+      <if test="content != null" >content = #{content,jdbcType=LONGVARCHAR},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="selectBaseConfig" resultMap="BaseResultMap">
+    select id, base_key, title, status, modify_time, content from p_base_config
+    <where>
+      <if test="baseKey != null and baseKey != ''" >and base_key = #{baseKey}</if>
+      <if test="status != null and status != ''" >and status = #{status}</if>
+    </where>
+  </select>
+
+</mapper>

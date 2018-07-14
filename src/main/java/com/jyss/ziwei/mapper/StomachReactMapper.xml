@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.StomachReactMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.StomachReact" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="cw_data" property="cwData" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="created" property="created" jdbcType="DATE" />
+  </resultMap>
+
+  <resultMap id="listBaseResultMap" type="string" >
+    <result column="created"  jdbcType="DATE" />
+  </resultMap>
+
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.StomachReact" >
+    insert into d_stomach_react (id, u_id, cw_data, note, status, create_time, created)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{cwData,jdbcType=VARCHAR}, 
+      #{note,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{created,jdbcType=DATE})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.StomachReact" >
+    update d_stomach_react
+    <set >
+      <if test="uId != null" >u_id = #{uId,jdbcType=BIGINT},</if>
+      <if test="cwData != null" >cw_data = #{cwData,jdbcType=VARCHAR},</if>
+      <if test="note != null" >note = #{note,jdbcType=VARCHAR},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+      <if test="created != null" >created = #{created,jdbcType=DATE},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--查询日期-->
+  <select id="selectCreated" resultMap="listBaseResultMap">
+    select created from d_stomach_react
+    where u_id = #{uId} and status = 1 group by created desc
+  </select>
+
+
+  <select id="selectStomachReact" resultMap="BaseResultMap">
+    select id, u_id, cw_data, note, status, create_time, created from d_stomach_react
+    <where>
+      <if test="uId != null and uId != ''" >and u_id = #{uId}</if>
+      <if test="created != null and created != ''" >and created = #{created}</if>
+      and status = 1
+    </where>
+    order by create_time desc
+  </select>
+
+</mapper>

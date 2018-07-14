@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.PhysicalTestMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.PhysicalTest" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="u_id" property="uId" jdbcType="INTEGER" />
+    <result column="pics" property="pics" jdbcType="VARCHAR" />
+    <result column="test_time" property="testTime" jdbcType="TIMESTAMP" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.PhysicalTest" useGeneratedKeys="true" keyProperty="id">
+    insert into u_physical_test (id, u_id,pics, test_time, created_at, last_modify_time, status)
+    values (#{id,jdbcType=INTEGER},#{uId,jdbcType=INTEGER}, #{pics,jdbcType=VARCHAR}, #{testTime,jdbcType=TIMESTAMP},
+      now(), now(), #{status,jdbcType=TINYINT})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.PhysicalTest" >
+    update u_physical_test
+    <set >
+      <if test="uId != null" >u_id = #{uId,jdbcType=VARCHAR},</if>
+      <if test="pics != null" >pics = #{pics,jdbcType=VARCHAR},</if>
+      <if test="testTime != null" >test_time = #{testTime,jdbcType=TIMESTAMP},</if>
+      <if test="createdAt != null" >created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+      <if test="lastModifyTime != null" >last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--详情查询  -->
+  <select id="getPhysicalTest" resultMap="BaseResultMap" parameterType="String">
+    select c.id,c.u_id,c.test_time,c.created_at,c.last_modify_time,c.status,
+    nullif(concat('${httpUrl}',c.pics), '${httpUrl}') pics
+    from u_physical_test c
+    <where>
+      1=1
+      <if test="status != null and status !=''"> and c.status = #{status} </if>
+      <if test="uId != null and uId !=''"> and c.u_id = #{uId} </if>
+      <if test="id != null and id !=''"> and c.id = #{id} </if>
+    </where>
+    order by c.created_at desc
+  </select>
+
+
+  <!--删除-->
+  <delete id="deletePhysicalTest" parameterType="String">
+    delete from u_physical_test
+    <where>
+      1=1
+      <if test="id != null and id !=''"> and id = #{id} </if>
+    </where>
+
+  </delete>
+
+</mapper>

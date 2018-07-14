@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.UserPraiseMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.UserPraise" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="know_id" property="knowId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="created" property="created" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.UserPraise" useGeneratedKeys="true" keyProperty="id">
+    insert into u_user_praise (id, u_id, know_id, status, created)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{knowId,jdbcType=INTEGER},
+      #{status,jdbcType=TINYINT}, #{created,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.UserPraise" >
+    update u_user_praise
+    <set >
+      <if test="uId != null" >u_id = #{uId,jdbcType=BIGINT},</if>
+      <if test="knowId != null" >know_id = #{knowId,jdbcType=INTEGER},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="created != null" >created = #{created,jdbcType=TIMESTAMP},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--查询点赞-->
+  <select id="selectUserPraise" resultMap="BaseResultMap">
+    select id, u_id, know_id, status, created from u_user_praise
+    <where>
+      <if test="uId != null and uId != ''" >and u_id = #{uId}</if>
+      <if test="knowId != null and knowId != ''" >and know_id = #{knowId}</if>
+      and status = 1
+    </where>
+  </select>
+
+</mapper>

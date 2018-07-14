@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.HealthActivityReportMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.HealthActivityReport" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="r_id" property="rId" jdbcType="INTEGER" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="report_name" property="reportName" jdbcType="VARCHAR" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="pz_pic" property="pzPic" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="zf_type" property="zfType" jdbcType="TINYINT" />
+    <result column="h_type" property="hType" jdbcType="TINYINT" />
+    <result column="contents" property="contents" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="h_title" property="hTitle" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <insert id="insertReport" parameterType="com.jyss.ziwei.entity.HealthActivityReport"
+          useGeneratedKeys="true" keyProperty="id">
+    insert into u_health_activity_report (id, r_id,u_id, tel, report_name, money, pz_pic,
+      created_at,last_modify_time, status, contents, zf_type , h_type ,order_sn,h_title)
+    values (#{id,jdbcType=INTEGER},#{rId,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{tel,jdbcType=VARCHAR},
+      #{reportName,jdbcType=VARCHAR}, #{money,jdbcType=DECIMAL}, #{pzPic,jdbcType=VARCHAR}, 
+      now(),now(), #{status,jdbcType=TINYINT}, #{contents,jdbcType=VARCHAR}, #{zfType,jdbcType=TINYINT},
+       #{hType,jdbcType=TINYINT}, #{orderSn,jdbcType=VARCHAR}, #{hTitle,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.HealthActivityReport" >
+    update u_health_activity_report
+    <set >
+      <if test="tel != null" >tel = #{tel,jdbcType=VARCHAR},</if>
+      <if test="reportName != null" >report_name = #{reportName,jdbcType=VARCHAR},</if>
+      <if test="pzPic != null" >pz_pic = #{pzPic,jdbcType=VARCHAR},</if>
+      <if test="lastModifyTime != null" >last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="zfType != null" >zf_type = #{zfType,jdbcType=TINYINT},</if>
+      <if test="contents != null" >contents = #{contents,jdbcType=LONGVARCHAR},</if>
+    </set>
+    <where>
+      1=1
+      <if test="id != null and id !=''"> and id = #{id,jdbcType=INTEGER} </if>
+      <if test="orderSn != null and orderSn !=''"> and order_sn = #{orderSn} </if>
+
+    </where>
+  </update>
+
+  <!--报名查询  -->
+  <select id="getActivityReport" resultMap="BaseResultMap" parameterType="String">
+    select c.*   from u_health_activity_report c
+    <where>
+      1=1 and status !=7
+      <if test="status != null and status !=''"> and c.status = #{status} </if>
+      <if test="zfType != null and zfType !=''"> and c.zf_type = #{zfType} </if>
+      <if test="uId != null and uId !=''"> and c.u_id = #{uId} </if>
+      <if test="rId != null and rId !=''"> and c.r_id = #{rId} </if>
+    </where>
+    order by c.status asc ,c.created_at desc
+  </select>
+
+
+
+  <!--报名查询 ==审核失败 -->
+  <select id="getActivityReportRefuseSh" resultMap="BaseResultMap" parameterType="String">
+    select c.*   from u_health_activity_report c
+    <where>
+      1=1 and status =7
+      <if test="zfType != null and zfType !=''"> and c.zf_type = #{zfType} </if>
+      <if test="uId != null and uId !=''"> and c.u_id = #{uId} </if>
+      <if test="rId != null and rId !=''"> and c.r_id = #{rId} </if>
+    </where>
+    order by c.status asc ,c.created_at desc
+  </select>
+
+  <!--报名查询 ===用于支付 -->
+  <select id="getPayActivityReport" resultMap="BaseResultMap" parameterType="String">
+    select c.*   from u_health_activity_report c
+    <where>
+      1=1
+      <if test="status != null and status !=''"> and c.status = #{status} </if>
+      <if test="zfType != null and zfType !=''"> and c.zf_type = #{zfType} </if>
+      <if test="uId != null and uId !=''"> and c.u_id = #{uId} </if>
+      <if test="rId != null and rId !=''"> and c.r_id = #{rId} </if>
+      <if test="orderSn != null and orderSn !=''"> and c.order_sn = #{orderSn} </if>
+    </where>
+    order by c.status asc ,c.created_at desc
+  </select>
+
+
+  <!--删除-->
+  <delete id="deleteActivityReport" parameterType="String">
+    delete from u_health_activity_report
+    <where>
+      1=1
+      <if test="id != null and id !=''"> and id = #{id} </if>
+    </where>
+
+  </delete>
+
+</mapper>

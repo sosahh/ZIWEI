@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.BConstantMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.BConstant" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bz_type" property="bzType" jdbcType="VARCHAR" />
+    <result column="bz_id" property="bzId" jdbcType="VARCHAR" />
+    <result column="bz_value" property="bzValue" jdbcType="VARCHAR" />
+    <result column="p_id" property="pId" jdbcType="INTEGER" />
+    <result column="bz_info" property="bzInfo" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.BConstant" useGeneratedKeys="true" keyProperty="id">
+    insert into b_constant (id, bz_type, bz_id, bz_value, p_id, bz_info, status)
+    values (#{id,jdbcType=INTEGER}, #{bzType,jdbcType=VARCHAR}, #{bzId,jdbcType=VARCHAR}, 
+      #{bzValue,jdbcType=VARCHAR}, #{pId,jdbcType=INTEGER}, #{bzInfo,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.BConstant" >
+    update b_constant
+    <set >
+      <if test="bzType != null" >bz_type = #{bzType,jdbcType=VARCHAR},</if>
+      <if test="bzId != null" >bz_id = #{bzId,jdbcType=VARCHAR},</if>
+      <if test="bzValue != null" >bz_value = #{bzValue,jdbcType=VARCHAR},</if>
+      <if test="pId != null" >p_id = #{pId,jdbcType=INTEGER},</if>
+      <if test="bzInfo != null" >bz_info = #{bzInfo,jdbcType=VARCHAR},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--常量查询  -->
+  <select id="getConstant" resultMap="BaseResultMap" parameterType="string">
+    select c.*   from b_constant c
+    <where>
+      1=1
+      <if test="status != null and status !=''"> and c.status = #{status} </if>
+      <if test="bzType != null and bzType !=''"> and c.bz_type like concat("%",#{bzType},"%") </if>
+      <if test="bzId != null and bzId !=''"> and c.bz_id = #{bzId} </if>
+      <if test="pId != null and pId !=''"> and c.p_id = #{pId} </if>
+      <if test="bzInfo != null and bzInfo !=''"> and c.bz_info like concat("%",#{bzInfo},"%") </if>
+    </where>
+    order by c.bz_type
+  </select>
+
+  <!--删除-->
+  <delete id="deleteConstant" parameterType="string">
+    delete from b_constant
+    <where>
+      1=1
+      <if test="id != null and id !=''"> and id = #{id} </if>
+    </where>
+  </delete>
+
+
+  <!--查询常量-->
+  <select id="selectBConstant" resultMap="BaseResultMap">
+    select id, bz_type, bz_id, bz_value, p_id, bz_info, status from b_constant
+    <where>
+      <if test="bzType != null and bzType !=''"> and bz_type =#{bzType} </if>
+      <if test="bzId != null and bzId !=''"> and bz_id = #{bzId} </if>
+      and status = 1
+    </where>
+    order by bz_id
+  </select>
+
+
+  <!--查询常量-->
+  <select id="selectBConstantBy" resultMap="BaseResultMap">
+    select id, bz_type, bz_id, bz_value, p_id, bz_info, status from b_constant
+    <where>
+      <if test="bzType != null and bzType !=''"> and bz_type =#{bzType} </if>
+      <if test="bzId != null and bzId !=''"> and bz_id = #{bzId} </if>
+      and status = 1
+    </where>
+  </select>
+
+
+</mapper>

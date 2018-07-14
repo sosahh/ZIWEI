@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.HealthActivityMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.HealthActivity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="u_id" property="uId" jdbcType="INTEGER" />
+    <result column="titles" property="titles" jdbcType="VARCHAR" />
+    <result column="pics" property="pics" jdbcType="VARCHAR" />
+    <result column="pics2" property="pics2" jdbcType="VARCHAR" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.jyss.ziwei.entity.HealthActivity" extends="BaseResultMap" >
+    <result column="contents" property="contents" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <!--活动添加 str_to_date(#{beginTime},'%Y-%m-%d')-->
+  <insert id="insertHealthActivity" parameterType="com.jyss.ziwei.entity.HealthActivity" useGeneratedKeys="true" keyProperty="id">
+    insert into h_health_activity (id, titles, pics,pics2,addr, money, begin_time, end_time,
+      created_at, last_modify_time, status, type, contents)
+    values (#{id,jdbcType=INTEGER}, #{titles,jdbcType=VARCHAR}, #{pics,jdbcType=VARCHAR},  #{pics2,jdbcType=VARCHAR},  #{addr,jdbcType=VARCHAR},
+      #{money,jdbcType=DECIMAL}, #{beginTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP},
+      now(),  now(), #{status,jdbcType=TINYINT},
+      #{type,jdbcType=TINYINT}, #{contents,jdbcType=LONGVARCHAR})
+  </insert>
+
+  <!--活动修改 -->
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.HealthActivity" >
+    update h_health_activity
+    <set >
+      <if test="titles != null" >titles = #{titles,jdbcType=VARCHAR},</if>
+      <if test="pics != null" >pics = #{pics,jdbcType=VARCHAR},</if>
+      <if test="pics2 != null" >pics2 = #{pics2,jdbcType=VARCHAR},</if>
+      <if test="addr != null" >addr = #{addr,jdbcType=VARCHAR},</if>
+      <if test="money != null" >money = #{money,jdbcType=DECIMAL},</if>
+      <if test="beginTime != null" >begin_time = #{beginTime,jdbcType=TIMESTAMP},</if>
+      <if test="endTime != null" >end_time = #{endTime,jdbcType=TIMESTAMP},</if>
+      <if test="createdAt != null" >created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+      <if test="lastModifyTime != null" >last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="type != null" >type = #{type,jdbcType=TINYINT},</if>
+      <if test="contents != null" >contents = #{contents,jdbcType=LONGVARCHAR},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--活动详情查询  -->
+  <select id="getHealthActivityDetials" resultMap="ResultMapWithBLOBs" parameterType="String">
+    select c.id,c.titles,c.pics2,c.addr,c.money,c.contents,c.begin_time,c.end_time,c.created_at,c.last_modify_time,c.status,c.type ,
+         nullif(concat('${httpUrl}',c.pics), '${httpUrl}') pics
+    from h_health_activity c
+    <where>
+      1=1
+      <if test="status != null and status !=''"> and c.status &lt;= #{status} </if>
+      <if test="type != null and type !=''"> and c.type = #{type} </if>
+      <if test="id != null and id !=''"> and c.id = #{id} </if>
+    </where>
+    order by c.status asc ,c.begin_time desc
+  </select>
+
+  <!--我的报名查询 -->
+  <select id="getMyActivityReport" resultMap="BaseResultMap" parameterType="String">
+    select c.* from (
+      select h.id,h.titles,nullif(concat('${httpUrl}',h.pics), '${httpUrl}') pics,h.begin_time,h.money,h.end_time,u.u_id,u.status ,u.last_modify_time from u_health_activity_report u
+      left join h_health_activity h
+      on u.r_id = h.id )c
+    <where>
+      1=1
+      <if test="status != null and status !=''"> and c.status in ( ${status}) </if>
+      <if test="uId != null and uId !=''"> and c.u_id = #{uId} </if>
+      <if test="id != null and id !=''"> and c.id = #{id} </if>
+    </where>
+    order by c.last_modify_time desc
+  </select>
+
+  <!--活动查询  -->
+  <select id="getHealthActivity" resultMap="ResultMapWithBLOBs" parameterType="String">
+    select c.id,c.titles,nullif(concat('${httpUrl}',c.pics), '${httpUrl}') pics,c.begin_time,c.end_time   from h_health_activity c
+    <where>
+      1=1
+      <if test="status != null and status !=''"> and c.status &lt;= #{status} </if>
+      <if test="type != null and type !=''"> and c.type = #{type} </if>
+      <if test="id != null and id !=''"> and c.id = #{id} </if>
+    </where>
+    order by c.status asc ,c.begin_time desc
+  </select>
+
+
+
+  <!--删除-->
+  <delete id="deleteHealthActivity" parameterType="String">
+    delete from h_health_activity
+    <where>
+      1=1
+      <if test="id != null and id !=''"> and id = #{id} </if>
+    </where>
+
+  </delete>
+
+
+</mapper>

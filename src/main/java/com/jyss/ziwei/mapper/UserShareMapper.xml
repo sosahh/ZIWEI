@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.UserShareMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.UserShare" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="know_id" property="knowId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="created" property="created" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.UserShare" useGeneratedKeys="true" keyProperty="id">
+    insert into u_user_share (id, u_id, know_id, type, created, status)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{knowId,jdbcType=INTEGER}, 
+      #{type,jdbcType=TINYINT}, #{created,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.UserShare" >
+    update u_user_share
+    <set >
+      <if test="uId != null" >u_id = #{uId,jdbcType=BIGINT},</if>
+      <if test="knowId != null" >know_id = #{knowId,jdbcType=INTEGER},</if>
+      <if test="type != null" >type = #{type,jdbcType=TINYINT},</if>
+      <if test="created != null" >created = #{created,jdbcType=TIMESTAMP},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

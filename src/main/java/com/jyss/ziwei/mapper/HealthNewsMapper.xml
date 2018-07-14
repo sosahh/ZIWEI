@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.HealthNewsMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.HealthNews" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="titles" property="titles" jdbcType="VARCHAR" />
+    <result column="pic" property="pic" jdbcType="VARCHAR" />
+    <result column="subtitle" property="subtitle" jdbcType="VARCHAR" />
+    <result column="in_pic" property="inPic" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="form" property="form" jdbcType="TINYINT" />
+    <result column="vedio_time" property="vedioTime" jdbcType="VARCHAR" />
+    <result column="recommend" property="recommend" jdbcType="TINYINT" />
+    <result column="scCount" property="scCount" />
+    <result column="dzCount" property="dzCount" />
+    <result column="plCount" property="plCount" />
+    <result column="fxCount" property="fxCount" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.jyss.ziwei.entity.HealthNews" extends="BaseResultMap" >
+    <result column="contents" property="contents" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <insert id="insertHealthNews" parameterType="com.jyss.ziwei.entity.HealthNews" useGeneratedKeys="true" keyProperty="id">
+    insert into h_health_news (id, category_id, titles, pic, subtitle, in_pic, created_at,
+      last_modify_time, status, type, form, contents, vedio_time)
+    values (#{id,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{titles,jdbcType=VARCHAR}, #{pic,jdbcType=VARCHAR},
+      #{subtitle,jdbcType=VARCHAR}, #{inPic,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP},
+      #{lastModifyTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT}, #{type,jdbcType=TINYINT},
+      #{form,jdbcType=TINYINT}, #{contents,jdbcType=LONGVARCHAR}, #{vedioTime,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.HealthNews" >
+    update h_health_news
+    <set >
+      <if test="categoryId != null and categoryId != ''" >category_id = #{categoryId,jdbcType=INTEGER},</if>
+      <if test="titles != null and titles != ''" >titles = #{titles,jdbcType=VARCHAR},</if>
+      <if test="pic != null and pic != ''" >pic = #{pic,jdbcType=VARCHAR},</if>
+      <if test="subtitle != null and subtitle != ''" >subtitle = #{subtitle,jdbcType=VARCHAR},</if>
+      <if test="inPic != null and inPic != ''" >in_pic = #{inPic,jdbcType=VARCHAR},</if>
+      <if test="createdAt != null" >created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+      <if test="lastModifyTime != null" >last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="type != null" >type = #{type,jdbcType=TINYINT},</if>
+      <if test="form != null" >form = #{form,jdbcType=TINYINT},</if>
+      <if test="contents != null and contents != ''" >contents = #{contents,jdbcType=LONGVARCHAR},</if>
+      <if test="vedioTime != null and vedioTime != ''" >vedio_time = #{vedioTime,jdbcType=VARCHAR},</if>
+      <if test="recommend != null and recommend != ''" >recommend = #{recommend,jdbcType=TINYINT},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <!--查询健康知识-->
+  <select id="selectHealthNews" resultMap="BaseResultMap">
+    select a.id, a.category_id, a.titles, nullif(concat('${httpUrl}',a.pic), '${httpUrl}') pic,
+    a.subtitle, a.vedio_time, a.type, a.form, ifnull(b.scCount,0) scCount,
+    ifnull(c.plCount,0) plCount, ifnull(d.dzCount,0) dzCount, ifnull(e.fxCount,0) fxCount from h_health_news a
+    left join (select count(*) scCount,know_id from u_user_collection where status = 1 group by know_id) b
+    on a.id = b.know_id
+    left join (select count(*) plCount,know_id from u_user_comment where status = 1 group by know_id) c
+    on a.id = c.know_id
+    left join (select count(*) dzCount,know_id from u_user_praise where status = 1 group by know_id) d
+    on a.id = d.know_id
+    left join (select count(*) fxCount,know_id from u_user_share where status = 1 group by know_id) e
+    on a.id = e.know_id
+    <where>
+      <if test="categoryId != null and categoryId != ''" >and a.category_id = #{categoryId}</if>
+      <if test="type != null and type != ''" >and a.type = #{type}</if>
+      and a.status = 1
+    </where>
+    order by a.created_at desc
+  </select>
+
+
+  <!--查询健康知识详情-->
+  <select id="selectHealthNewsBy" resultMap="BaseResultMap">
+    select a.id, a.category_id, a.titles, nullif(concat('${httpUrl}',a.in_pic), '${httpUrl}') in_pic,
+    a.contents, a.created_at, a.vedio_time, a.type, a.form, b.name as pic
+    from h_health_news a left join h_health_news_category b on a.category_id = b.id
+    <where>
+      <if test="id != null and id != ''" >and a.id = #{id}</if>
+      and a.status = 1
+    </where>
+  </select>
+
+
+  <!--我的收藏健康知识-->
+  <select id="selectHealthNewsBySC" parameterType="long" resultMap="BaseResultMap">
+    select a.id, a.category_id, a.titles, nullif(concat('${httpUrl}',a.pic), '${httpUrl}') pic,
+    a.subtitle, a.vedio_time, a.type, a.form, ifnull(b.scCount,0) scCount,
+    ifnull(c.plCount,0) plCount, ifnull(d.dzCount,0) dzCount, ifnull(e.fxCount,0) fxCount from h_health_news a
+    left join (select count(*) scCount,know_id from u_user_collection where status = 1 group by know_id) b
+    on a.id = b.know_id
+    left join (select count(*) plCount,know_id from u_user_comment where status = 1 group by know_id) c
+    on a.id = c.know_id
+    left join (select count(*) dzCount,know_id from u_user_praise where status = 1 group by know_id) d
+    on a.id = d.know_id
+    left join (select count(*) fxCount,know_id from u_user_share where status = 1 group by know_id) e
+    on a.id = e.know_id
+    left join u_user_collection f on a.id = f.know_id
+    <where>
+      <if test="uId != null and uId != ''" >and f.u_id = #{uId}</if>
+      and a.status = 1 and f.status = 1
+    </where>
+    order by f.created desc
+  </select>
+
+
+  <!--我的评论健康知识-->
+  <select id="selectHealthNewsByPL" parameterType="long" resultMap="BaseResultMap">
+    select a.id, a.category_id, a.titles, nullif(concat('${httpUrl}',a.pic), '${httpUrl}') pic,
+    a.subtitle, a.vedio_time, a.type, a.form, b.content in_pic
+    from h_health_news a left join u_user_comment b on a.id = b.know_id
+    <where>
+      <if test="uId != null and uId != ''" >and b.u_id = #{uId}</if>
+      and a.status = 1 and b.status = 1
+    </where>
+    order by b.created desc
+  </select>
+
+
+
+  <!--我的点赞健康知识-->
+  <select id="selectHealthNewsByDZ" parameterType="long" resultMap="BaseResultMap">
+    select a.id, a.category_id, a.titles, nullif(concat('${httpUrl}',a.pic), '${httpUrl}') pic,
+    a.subtitle, a.vedio_time, a.type, a.form, ifnull(b.scCount,0) scCount,
+    ifnull(c.plCount,0) plCount, ifnull(d.dzCount,0) dzCount, ifnull(e.fxCount,0) fxCount from h_health_news a
+    left join (select count(*) scCount,know_id from u_user_collection where status = 1 group by know_id) b
+    on a.id = b.know_id
+    left join (select count(*) plCount,know_id from u_user_comment where status = 1 group by know_id) c
+    on a.id = c.know_id
+    left join (select count(*) dzCount,know_id from u_user_praise where status = 1 group by know_id) d
+    on a.id = d.know_id
+    left join (select count(*) fxCount,know_id from u_user_share where status = 1 group by know_id) e
+    on a.id = e.know_id
+    left join u_user_praise f on a.id = f.know_id
+    <where>
+      <if test="uId != null and uId != ''" >and f.u_id = #{uId}</if>
+      and a.status = 1 and f.status = 1
+    </where>
+    order by f.created desc
+  </select>
+
+
+  <!--我的分享健康知识-->
+  <select id="selectHealthNewsByFX" parameterType="long" resultMap="BaseResultMap">
+    select a.id, a.category_id, a.titles, nullif(concat('${httpUrl}',a.pic), '${httpUrl}') pic,
+    a.subtitle, a.vedio_time, a.type, a.form, ifnull(b.scCount,0) scCount,
+    ifnull(c.plCount,0) plCount, ifnull(d.dzCount,0) dzCount, ifnull(e.fxCount,0) fxCount from h_health_news a
+    left join (select count(*) scCount,know_id from u_user_collection where status = 1 group by know_id) b
+    on a.id = b.know_id
+    left join (select count(*) plCount,know_id from u_user_comment where status = 1 group by know_id) c
+    on a.id = c.know_id
+    left join (select count(*) dzCount,know_id from u_user_praise where status = 1 group by know_id) d
+    on a.id = d.know_id
+    left join (select count(*) fxCount,know_id from u_user_share where status = 1 group by know_id) e
+    on a.id = e.know_id
+    left join u_user_share f on a.id = f.know_id
+    <where>
+      <if test="uId != null and uId != ''" >and f.u_id = #{uId}</if>
+      and a.status = 1 and f.status = 1
+    </where>
+    order by f.created desc
+  </select>
+
+
+  <!--查询健康知识列表-->
+  <select id="getHealthNewsList" parameterType="int" resultMap="BaseResultMap">
+    select id, category_id, titles, nullif(concat('${httpUrl}',pic), '${httpUrl}') pic,
+    created_at, type, form, recommend from h_health_news
+    <where>
+      <if test="categoryId != null and categoryId != ''" >and category_id = #{categoryId}</if>
+      <if test="recommend != null and recommend != ''" >and recommend = #{recommend}</if>
+      and status = 1
+    </where>
+    order by created_at desc
+  </select>
+
+
+  <!--查询健康知识详情-->
+  <select id="getHealthNewsById" resultMap="BaseResultMap">
+    select id, category_id, titles, nullif(concat('${httpUrl}',pic), '${httpUrl}') pic, subtitle,
+    nullif(concat('${httpUrl}',in_pic), '${httpUrl}') in_pic, contents, created_at, type, recommend
+    from h_health_news
+    <where>
+      <if test="id != null and id != ''" >and id = #{id}</if>
+      and status = 1
+    </where>
+  </select>
+
+
+  <!--推荐-->
+  <update id="updateRecommend">
+    update h_health_news set recommend = #{recommend} where recommend = #{recommendBF} and id = #{id}
+  </update>
+
+
+</mapper>

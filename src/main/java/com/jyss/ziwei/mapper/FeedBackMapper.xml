@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.FeedBackMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.FeedBack" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="u_nick" property="uNick" jdbcType="VARCHAR" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="reply_id" property="replyId" jdbcType="BIGINT" />
+    <result column="reply_content" property="replyContent" jdbcType="VARCHAR" />
+    <result column="reply_created" property="replyCreated" jdbcType="TIMESTAMP" />
+    <result column="reply_status" property="replyStatus" jdbcType="TINYINT" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.FeedBack" >
+    insert into u_feedback (id, u_id, u_nick, message, status, create_time)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{uNick,jdbcType=VARCHAR}, 
+      #{message,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.FeedBack" >
+    update u_feedback
+    <set >
+      <if test="uId != null" >u_id = #{uId,jdbcType=BIGINT},</if>
+      <if test="uNick != null" >u_nick = #{uNick,jdbcType=VARCHAR},</if>
+      <if test="message != null" >message = #{message,jdbcType=VARCHAR},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+      <if test="replyId != null" >reply_id = #{replyId,jdbcType=BIGINT},</if>
+      <if test="replyContent != null" >reply_content = #{replyContent,jdbcType=VARCHAR},</if>
+      <if test="replyCreated != null" >reply_created = #{replyCreated,jdbcType=TIMESTAMP},</if>
+      <if test="replyStatus != null" >reply_status = #{replyStatus,jdbcType=TINYINT},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--查询消息-->
+  <select id="selectFeedBack" resultMap="BaseResultMap">
+    select id, u_id, u_nick, message, status, create_time, reply_id, reply_content, reply_created, reply_status
+    from u_feedback
+    <where>
+      <if test="uId != null and uId != ''" >and u_id = #{uId}</if>
+    </where>
+    order by create_time desc
+  </select>
+
+
+  <!--读取消息-->
+  <update id="updateFeedStatus" parameterType="long">
+    update u_feedback set status = 1 where u_id = #{uId} and status = 0
+  </update>
+
+
+  <!--查询消息-->
+  <select id="selectFeedBackHT" resultMap="BaseResultMap">
+    select a.id, a.u_id, a.u_nick, a.message, a.status, a.create_time, a.reply_id, a.reply_content,
+    a.reply_created, a.reply_status
+    from u_feedback a left join u_user b on a.u_id = b.u_id
+    <where>
+      <if test="manageId != null and manageId != ''" >and b.manage_id = #{manageId}</if>
+      <if test="replyStatus != null" >and a.reply_status = #{replyStatus}</if>
+    </where>
+    order by a.create_time desc
+  </select>
+
+
+</mapper>

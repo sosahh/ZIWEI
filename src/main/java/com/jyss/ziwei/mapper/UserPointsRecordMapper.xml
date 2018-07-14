@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.UserPointsRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.UserPointsRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="know_id" property="knowId" jdbcType="INTEGER" />
+    <result column="bz_type" property="bzType" jdbcType="TINYINT" />
+    <result column="detail" property="detail" jdbcType="VARCHAR" />
+    <result column="score_type" property="scoreType" jdbcType="TINYINT" />
+    <result column="score" property="score" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.UserPointsRecord" useGeneratedKeys="true" keyProperty="id">
+    insert into u_user_points_record (id, u_id, know_id, 
+      bz_type, detail, score_type, score, status, created_at)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{knowId,jdbcType=INTEGER}, 
+      #{bzType,jdbcType=TINYINT}, #{detail,jdbcType=VARCHAR}, #{scoreType,jdbcType=TINYINT}, 
+      #{score,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{createdAt,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.UserPointsRecord" >
+    update u_user_points_record
+    <set >
+      <if test="uId != null" >u_id = #{uId,jdbcType=BIGINT},</if>
+      <if test="knowId != null" >know_id = #{knowId,jdbcType=INTEGER},</if>
+      <if test="bzType != null" >bz_type = #{bzType,jdbcType=TINYINT},</if>
+      <if test="detail != null" >detail = #{detail,jdbcType=VARCHAR},</if>
+      <if test="scoreType != null" >score_type = #{scoreType,jdbcType=TINYINT},</if>
+      <if test="score != null" >score = #{score,jdbcType=INTEGER},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="createdAt != null" >created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <!--查询积分明细-->
+  <select id="selectUserPoints" resultMap="BaseResultMap">
+    select id, u_id, know_id, bz_type, detail, score_type, score, status, created_at
+    from u_user_points_record
+    <where>
+      <if test="uId != null and uId != ''">and u_id = #{uId}</if>
+      <if test="bzType != null and bzType != ''">and bz_type = #{bzType}</if>
+      <if test="createdAt != null and createdAt != ''">and date_format(created_at,'%Y-%m-%d') = #{createdAt}</if>
+      and status = 1
+    </where>
+    order by created_at desc
+  </select>
+
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.BodyFeelMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.BodyFeel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="st_data" property="stData" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="created" property="created" jdbcType="DATE" />
+  </resultMap>
+
+  <resultMap id="listBaseResultMap" type="string" >
+    <result column="created"  jdbcType="DATE" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.BodyFeel" >
+    insert into d_body_feel (id, u_id, st_data, note, status, create_time, created)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{stData,jdbcType=VARCHAR}, 
+      #{note,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{created,jdbcType=DATE})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.BodyFeel" >
+    update d_body_feel
+    <set >
+      <if test="uId != null" >u_id = #{uId,jdbcType=BIGINT},</if>
+      <if test="stData != null" >st_data = #{stData,jdbcType=VARCHAR},</if>
+      <if test="note != null" >note = #{note,jdbcType=VARCHAR},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+      <if test="created != null" >created = #{created,jdbcType=DATE},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--查询日期-->
+  <select id="selectCreated" resultMap="listBaseResultMap">
+    select created from d_body_feel
+    where u_id = #{uId} and status = 1 group by created desc
+  </select>
+
+
+  <select id="selectBodyFeel" resultMap="BaseResultMap">
+    select id, u_id, st_data, note, status, create_time, created from d_body_feel
+    <where>
+      <if test="uId != null and uId != ''" >and u_id = #{uId}</if>
+      <if test="created != null and created != ''" >and created = #{created}</if>
+      and status = 1
+    </where>
+    order by create_time desc
+  </select>
+
+
+</mapper>

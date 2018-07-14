@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.BodyFecesMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.BodyFeces" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="smell" property="smell" jdbcType="VARCHAR" />
+    <result column="viscosity" property="viscosity" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="DATE" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.BodyFeces" >
+    insert into d_body_feces (id, u_id, count, color, smell, viscosity,
+      score, status, create_time)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{count,jdbcType=INTEGER}, 
+      #{color,jdbcType=VARCHAR}, #{smell,jdbcType=VARCHAR}, #{viscosity,jdbcType=VARCHAR}, 
+      #{score,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=DATE})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.BodyFeces" >
+    update d_body_feces
+    <set >
+      <if test="uId != null" >u_id = #{uId,jdbcType=BIGINT},</if>
+      <if test="count != null" >count = #{count,jdbcType=INTEGER},</if>
+      <if test="color != null" >color = #{color,jdbcType=VARCHAR},</if>
+      <if test="smell != null" >smell = #{smell,jdbcType=VARCHAR},</if>
+      <if test="viscosity != null" >viscosity = #{viscosity,jdbcType=VARCHAR},</if>
+      <if test="score != null" >score = #{score,jdbcType=VARCHAR},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="createTime != null" >create_time = #{createTime,jdbcType=DATE},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectBodyFeces" resultMap="BaseResultMap">
+    select id, u_id, count, color, smell, viscosity, score, status, create_time
+    from d_body_feces
+    <where>
+      <if test="uId != null and uId != ''" >and u_id = #{uId}</if>
+      <if test="createTime != null and createTime != ''" >and create_time = #{createTime}</if>
+      and status = 1
+    </where>
+    order by create_time desc
+  </select>
+
+</mapper>

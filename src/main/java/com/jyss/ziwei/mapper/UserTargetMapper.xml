@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.UserTargetMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.UserTarget" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="diastolic_blood_pressure" property="diastolicBloodPressure" jdbcType="INTEGER" />
+    <result column="systolic_blood_pressure" property="systolicBloodPressure" jdbcType="INTEGER" />
+    <result column="blood_sugar" property="bloodSugar" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.UserTarget" >
+    insert into u_user_target (id, u_id, weight, diastolic_blood_pressure, systolic_blood_pressure,
+      blood_sugar, status, create_time)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{weight,jdbcType=DECIMAL}, 
+      #{diastolicBloodPressure,jdbcType=INTEGER}, #{systolicBloodPressure,jdbcType=INTEGER}, 
+      #{bloodSugar,jdbcType=DECIMAL}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+
+  <!--查询目标-->
+  <select id="selectUserTarget" parameterType="long" resultMap="BaseResultMap">
+    select id, u_id, weight, diastolic_blood_pressure, systolic_blood_pressure,
+    blood_sugar, status, create_time from u_user_target
+    <where>
+      <if test="uId != null and uId != ''">and u_id = #{uId}</if>
+    </where>
+  </select>
+
+
+  <!--插入或更新-->
+  <insert id="updateUserTarget" parameterType="com.jyss.ziwei.entity.UserTarget">
+    insert into u_user_target (id, u_id, weight, diastolic_blood_pressure, systolic_blood_pressure,
+    blood_sugar, create_time)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{weight,jdbcType=DECIMAL},
+    #{diastolicBloodPressure,jdbcType=INTEGER}, #{systolicBloodPressure,jdbcType=INTEGER},
+    #{bloodSugar,jdbcType=DECIMAL}, now())
+    ON DUPLICATE KEY UPDATE weight = #{weight}, diastolic_blood_pressure = #{diastolicBloodPressure},
+    systolic_blood_pressure = #{systolicBloodPressure}, blood_sugar = #{bloodSugar}
+
+  </insert>
+
+
+
+
+
+</mapper>

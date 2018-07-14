@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.BloodPressureMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.BloodPressure" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="sy_data" property="syData" jdbcType="VARCHAR" />
+    <result column="di_data" property="diData" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.BloodPressure" >
+    insert into d_blood_pressure (id, u_id, sy_data, di_data, status, create_time)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{syData,jdbcType=VARCHAR}, 
+      #{diData,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.BloodPressure" >
+    update d_blood_pressure
+    <set >
+      <if test="uId != null" >u_id = #{uId,jdbcType=BIGINT},</if>
+      <if test="syData != null" >sy_data = #{syData,jdbcType=VARCHAR},</if>
+      <if test="diData != null" >di_data = #{diData,jdbcType=VARCHAR},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

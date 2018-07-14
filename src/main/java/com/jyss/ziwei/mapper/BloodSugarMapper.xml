@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.BloodSugarMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.BloodSugar" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="bz_type" property="bzType" jdbcType="TINYINT" />
+    <result column="st_data" property="stData" jdbcType="VARCHAR" />
+    <result column="test_time" property="testTime" jdbcType="TIMESTAMP" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.BloodSugar" >
+    insert into d_blood_sugar (id, u_id, bz_type, 
+      st_data, test_time, note, status, type, create_time)
+    values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{bzType,jdbcType=TINYINT}, 
+      #{stData,jdbcType=VARCHAR}, #{testTime,jdbcType=TIMESTAMP}, #{note,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{type,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.BloodSugar" >
+    update d_blood_sugar
+    <set >
+      <if test="uId != null" >u_id = #{uId,jdbcType=BIGINT},</if>
+      <if test="bzType != null" >bz_type = #{bzType,jdbcType=TINYINT},</if>
+      <if test="stData != null" >st_data = #{stData,jdbcType=VARCHAR},</if>
+      <if test="testTime != null" >test_time = #{testTime,jdbcType=TIMESTAMP},</if>
+      <if test="note != null" >note = #{note,jdbcType=VARCHAR},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="type != null" >type = #{type,jdbcType=TINYINT},</if>
+      <if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

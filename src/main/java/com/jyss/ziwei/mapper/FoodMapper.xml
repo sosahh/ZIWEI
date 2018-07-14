@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.FoodMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.Food" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="picture" property="picture" jdbcType="VARCHAR" />
+    <result column="heat" property="heat" jdbcType="INTEGER" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <insert id="insertFood" parameterType="com.jyss.ziwei.entity.Food" >
+    insert into b_food (id, name, picture, heat, count, unit, status, create_time)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, 
+      #{heat,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, #{unit,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.Food" >
+    update b_food
+    <set >
+      <if test="name != null" >name = #{name,jdbcType=VARCHAR},</if>
+      <if test="picture != null" >picture = #{picture,jdbcType=VARCHAR},</if>
+      <if test="heat != null" >heat = #{heat,jdbcType=INTEGER},</if>
+      <if test="count != null" >count = #{count,jdbcType=INTEGER},</if>
+      <if test="unit != null" >unit = #{unit,jdbcType=VARCHAR},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <!--查询食物大卡-->
+  <select id="selectFood" resultMap="BaseResultMap">
+    select id, name, nullif(concat('${httpUrl}',picture),'${httpUrl}') as picture,
+    heat, count, unit,
+    concat(round(heat*count,0),"大卡/",count,unit) as description,
+    status, create_time from b_food
+    <where>
+      <if test="name != null and name != ''">and name like concat(#{name},'%')</if>
+      and status = 1
+    </where>
+  </select>
+
+
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.AccountLogMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.AccountLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.AccountLog" useGeneratedKeys="true" keyProperty="id">
+    insert into p_account_log (id, username, description, created_at, status)
+    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{createdAt,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.AccountLog" >
+    update p_account_log
+    <set >
+      <if test="username != null" >username = #{username,jdbcType=VARCHAR},</if>
+      <if test="description != null" >description = #{description,jdbcType=VARCHAR},</if>
+      <if test="createdAt != null" >created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

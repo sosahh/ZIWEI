@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jyss.ziwei.mapper.UserCommentMapper" >
+  <resultMap id="BaseResultMap" type="com.jyss.ziwei.entity.UserComment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="know_id" property="knowId" jdbcType="INTEGER" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="u_nick" property="uNick" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="created" property="created" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="reply_id" property="replyId" jdbcType="BIGINT" />
+    <result column="reply_content" property="replyContent" jdbcType="VARCHAR" />
+    <result column="reply_created" property="replyCreated" jdbcType="TIMESTAMP" />
+    <result column="reply_status" property="replyStatus" jdbcType="TINYINT" />
+    <result column="headpic" property="headpic" />
+    <result column="level" property="level" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.jyss.ziwei.entity.UserComment" useGeneratedKeys="true" keyProperty="id">
+    insert into u_user_comment (id, know_id, u_id, u_nick, content, created, status)
+    values (#{id,jdbcType=INTEGER}, #{knowId,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT},
+      #{uNick,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=TINYINT})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.UserComment" >
+    update u_user_comment
+    <set >
+      <if test="knowId != null" >know_id = #{knowId,jdbcType=INTEGER},</if>
+      <if test="uId != null" >u_id = #{uId,jdbcType=BIGINT},</if>
+      <if test="uNick != null" >u_nick = #{uNick,jdbcType=VARCHAR},</if>
+      <if test="content != null" >content = #{content,jdbcType=VARCHAR},</if>
+      <if test="created != null" >created = #{created,jdbcType=TIMESTAMP},</if>
+      <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
+      <if test="replyId != null" >reply_id = #{replyId,jdbcType=BIGINT},</if>
+      <if test="replyContent != null" >reply_content = #{replyContent,jdbcType=VARCHAR},</if>
+      <if test="replyCreated != null" >reply_created = #{replyCreated,jdbcType=TIMESTAMP},</if>
+      <if test="replyStatus != null" >reply_status = #{replyStatus,jdbcType=TINYINT},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <!--查询评论-->
+  <select id="selectUserComment" resultMap="BaseResultMap">
+    select a.id, a.know_id, a.u_id, a.content, a.created, a.status, a.reply_content, a.reply_status,
+    b.nickname u_nick, nullif(concat('${httpUrl}',b.headpic), '${httpUrl}') headpic, b.level
+    from u_user_comment a left join u_user b on a.u_id = b.u_id
+    <where>
+      <if test="knowId != null and knowId != ''">and a.know_id = #{knowId}</if>
+      and a.status = 1
+    </where>
+    order by a.created desc
+  </select>
+
+
+  <!--查询评论数-->
+  <select id="selectTotalComment" parameterType="int" resultType="int">
+    select count(*) from u_user_comment where know_id = #{knowId} and status = 1
+  </select>
+
+
+</mapper>
