@@ -52,4 +52,14 @@
     order by create_time desc
   </select>
 
+  <!--查询最近一条数据-->
+  <select id="selectBodyDrugLately" resultMap="BaseResultMap">
+    select id, u_id, measure, name, status, create_time, created from d_body_drug
+    <where>
+      <if test="uId != null and uId != ''" >and u_id = #{uId}</if>
+      and status = 1
+    </where>
+    order by create_time desc limit 0,1
+  </select>
+
 </mapper>

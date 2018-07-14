@@ -20,4 +20,7 @@ public interface BodyDrugMapper {
 
     List<BodyDrug> selectBodyDrug(@Param("uId")Long uId, @Param("created")String created);
 
+    //查询最近一条数据
+    List<BodyDrug> selectBodyDrugLately(@Param("uId")Long uId);
+
 }

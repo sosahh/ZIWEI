@@ -105,7 +105,7 @@ public class BodyDietAction {
                 bodyDiet.setPicture(picture.substring(picture.lastIndexOf("uploadDiet")));
             }
             bodyDiet.setuId(uId);
-            bodyDiet.setDetails(bodyDiet.getDetails() + "大卡");
+            bodyDiet.setDetails(bodyDiet.getEnergy() + "大卡");
             bodyDiet.setCreated(bodyDiet.getCreateTime());
             return bodyDietService.insertBodyDiet(bodyDiet);
         }
@@ -242,7 +242,6 @@ public class BodyDietAction {
         }
         return ResponseResult.error("1","token失效！");
     }
-
 
 
 

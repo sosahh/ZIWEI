@@ -8,6 +8,7 @@
     <result column="picture" property="picture" jdbcType="VARCHAR" />
     <result column="food_name" property="foodName" jdbcType="VARCHAR" />
     <result column="details" property="details" jdbcType="VARCHAR" />
+    <result column="energy" property="energy" jdbcType="INTEGER" />
     <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -19,11 +20,12 @@
   </resultMap>
 
   <insert id="insertBodyDiet" parameterType="com.jyss.ziwei.entity.BodyDiet" >
-    insert into d_body_diet (id, u_id, meal, picture, food_name, details,
+    insert into d_body_diet (id, u_id, meal, picture, food_name, details, energy,
       description, create_time, created)
     values (#{id,jdbcType=INTEGER}, #{uId,jdbcType=BIGINT}, #{meal,jdbcType=VARCHAR}, 
-      #{picture,jdbcType=VARCHAR}, #{foodName,jdbcType=VARCHAR}, #{details,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{created,jdbcType=DATE})
+      #{picture,jdbcType=VARCHAR}, #{foodName,jdbcType=VARCHAR}, #{details,jdbcType=VARCHAR},
+      #{energy,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{created,jdbcType=DATE})
   </insert>
 
   <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.BodyDiet" >
@@ -34,6 +36,7 @@
       <if test="picture != null" >picture = #{picture,jdbcType=VARCHAR},</if>
       <if test="foodName != null" >food_name = #{foodName,jdbcType=VARCHAR},</if>
       <if test="details != null" >details = #{details,jdbcType=VARCHAR},</if>
+      <if test="energy != null" >energy = #{energy,jdbcType=INTEGER},</if>
       <if test="description != null" >description = #{description,jdbcType=VARCHAR},</if>
       <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
       <if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
@@ -52,7 +55,7 @@
 
   <select id="selectBodyDiet" resultMap="BaseResultMap">
     select id, u_id, meal, nullif(concat('${httpUrl}',picture), '${httpUrl}') as picture,
-    food_name, details, description, status, create_time, created from d_body_diet
+    food_name, details, energy, description, status, create_time, created from d_body_diet
     <where>
       <if test="uId != null and uId != ''" >and u_id = #{uId}</if>
       <if test="meal != null and meal != ''" >and meal = #{meal}</if>
@@ -60,6 +63,16 @@
       and status = 1
     </where>
     order by create_time desc
+  </select>
+
+  <!--查询单日总能量-->
+  <select id="selectTotalEnergy" resultType="int">
+    select ifnull(sum(energy),0) from d_body_diet
+    <where>
+      <if test="uId != null and uId != ''" >and u_id = #{uId}</if>
+      <if test="created != null and created != ''" >and created = #{created}</if>
+      and status = 1
+    </where>
   </select>
 
 </mapper>

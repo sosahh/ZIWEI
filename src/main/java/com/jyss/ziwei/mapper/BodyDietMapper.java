@@ -4,6 +4,7 @@ import com.jyss.ziwei.entity.BodyDiet;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -19,5 +20,8 @@ public interface BodyDietMapper {
 
     //
     List<BodyDiet> selectBodyDiet(@Param("uId")Long uId, @Param("meal")String meal, @Param("created")String created);
+
+    //查询单日总能量
+    int selectTotalEnergy(@Param("uId")Long uId, @Param("created")Date created);
 
 }

@@ -14,6 +14,7 @@ public class BodyDiet implements Serializable {
     private String picture;
     private String foodName;    //食物名称
     private String details;     //详情
+    private Integer energy;
     private String description;   //描述备注
     private Integer status;
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -67,6 +68,14 @@ public class BodyDiet implements Serializable {
 
     public void setDetails(String details) {
         this.details = details == null ? null : details.trim();
+    }
+
+    public Integer getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(Integer energy) {
+        this.energy = energy;
     }
 
     public String getDescription() {
