@@ -1,9 +1,7 @@
 package com.jyss.ziwei.service;
 
 
-import com.jyss.ziwei.entity.BodyDiet;
-import com.jyss.ziwei.entity.BodyDrug;
-import com.jyss.ziwei.entity.ResponseResult;
+import com.jyss.ziwei.entity.*;
 import org.apache.ibatis.annotations.Param;
 
 
@@ -36,5 +34,17 @@ public interface BodyDietService {
 
     //查询最近的饮食和药物记录
     ResponseResult selectDrugAndDiet(@Param("uId")Long uId);
+
+    /////////////后台////////////
+    //食物
+    int insertFood(Food food);
+
+    int updateByPrimaryKey(Food food);
+
+    //药物
+    int insertDrug(Drug drug);
+
+    int updateDrugByKey(Drug drug);
+
 
 }

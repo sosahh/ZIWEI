@@ -11,9 +11,10 @@ public class Food implements Serializable {
     private Integer heat;
     private Integer count;
     private String unit;
-    private String description;
     private Integer status;
     private Date createTime;
+
+    private String description;
 
     public Integer getId() {
         return id;

@@ -14,17 +14,17 @@
     <result column="drug_name"  jdbcType="VARCHAR" />
   </resultMap>
 
-  <insert id="insert" parameterType="com.jyss.ziwei.entity.Drug" >
+  <insert id="insertDrug" parameterType="com.jyss.ziwei.entity.Drug" >
     insert into b_drug (id, drug_name, name, drug_type, status, create_time)
     values (#{id,jdbcType=INTEGER}, #{drugName,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{drugType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.Drug" >
+  <update id="updateDrugByKey" parameterType="com.jyss.ziwei.entity.Drug" >
     update b_drug
     <set >
-      <if test="drugName != null" >drug_name = #{drugName,jdbcType=VARCHAR},</if>
-      <if test="name != null" >name = #{name,jdbcType=VARCHAR},</if>
+      <if test="drugName != null and drugName != ''" >drug_name = #{drugName,jdbcType=VARCHAR},</if>
+      <if test="name != null and name != ''" >name = #{name,jdbcType=VARCHAR},</if>
       <if test="drugType != null" >drug_type = #{drugType,jdbcType=TINYINT},</if>
       <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
       <if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>

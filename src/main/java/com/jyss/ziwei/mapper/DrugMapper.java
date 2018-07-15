@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface DrugMapper {
 
-    int insert(Drug drug);
+    int insertDrug(Drug drug);
 
-    int updateByPrimaryKey(Drug drug);
+    int updateDrugByKey(Drug drug);
 
     //查询日期
     List<String> selectDrugName(@Param("name")String name, @Param("drugType")Integer drugType);

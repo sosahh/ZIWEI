@@ -8,9 +8,9 @@
     <result column="heat" property="heat" jdbcType="INTEGER" />
     <result column="count" property="count" jdbcType="INTEGER" />
     <result column="unit" property="unit" jdbcType="VARCHAR" />
-    <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
   </resultMap>
 
   <insert id="insertFood" parameterType="com.jyss.ziwei.entity.Food" >
@@ -23,11 +23,11 @@
   <update id="updateByPrimaryKey" parameterType="com.jyss.ziwei.entity.Food" >
     update b_food
     <set >
-      <if test="name != null" >name = #{name,jdbcType=VARCHAR},</if>
-      <if test="picture != null" >picture = #{picture,jdbcType=VARCHAR},</if>
+      <if test="name != null and name != ''" >name = #{name,jdbcType=VARCHAR},</if>
+      <if test="picture != null and picture != ''" >picture = #{picture,jdbcType=VARCHAR},</if>
       <if test="heat != null" >heat = #{heat,jdbcType=INTEGER},</if>
       <if test="count != null" >count = #{count,jdbcType=INTEGER},</if>
-      <if test="unit != null" >unit = #{unit,jdbcType=VARCHAR},</if>
+      <if test="unit != null and unit != ''" >unit = #{unit,jdbcType=VARCHAR},</if>
       <if test="status != null" >status = #{status,jdbcType=TINYINT},</if>
       <if test="createTime != null" >create_time = #{createTime,jdbcType=TIMESTAMP},</if>
     </set>

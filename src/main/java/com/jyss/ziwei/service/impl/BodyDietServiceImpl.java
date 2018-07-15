@@ -176,4 +176,20 @@ public class BodyDietServiceImpl implements BodyDietService {
     }
 
 
+    /////////////后台////////////
+
+    /**
+     * 添加食物
+     */
+    @Override
+    public int insertFood(Food food) {
+        return foodMapper.insertFood(food);
+    }
+
+    @Override
+    public int updateByPrimaryKey(Food food) {
+        return foodMapper.updateByPrimaryKey(food);
+    }
+
+
 }
